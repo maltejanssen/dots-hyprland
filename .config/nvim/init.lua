@@ -3,6 +3,11 @@
 vim.env.XDG_RUNTIME_DIR = "/run/user/1000"
 vim.env.WAYLAND_DISPLAY = "wayland-1"
 
+vopt.tabstop = 2
+vopt.smartindent = true
+vopt.shiftwidth = 2
+vopt.expandtab = true
+
 vim.o.clipboard = 'unnamedplus'
 vim.o.mouse="v"
 vim.g.clipboard = {
