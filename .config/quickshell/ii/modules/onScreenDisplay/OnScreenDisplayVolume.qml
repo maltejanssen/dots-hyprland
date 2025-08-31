@@ -14,6 +14,51 @@ Scope {
     id: root
     property string protectionMessage: ""
     property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
+ 
+    property int volume: -1
+    property int micVolume: -1
+    property bool muted: false
+    Process {
+      running: true
+      onRunningChanged: running = true
+      command: ["pactl", "subscribe"]
+      stdout: SplitParser {
+        onRead: data => {
+          const [, updatedSink] = data.match(/sink #(\d+)/) ?? []
+          if (updatedSink) {
+            volumeProcess.running = true
+            muteProcess.running = true
+            return
+          }
+          const [, updatedSource] = data.match(/source #(\d+)/) ?? []
+          if (updatedSource) {
+            micVolumeProcess.running = true
+            micMuteProcess.running = true
+            return
+          }
+        }
+      }
+    }
+
+    Process {
+      running: true
+      id: volumeProcess
+      command: ["pactl", "get-sink-volume", "@DEFAULT_SINK@"]
+      stdout: SplitParser {
+        splitMarker: ""
+        onRead: data => {
+          volume = Number(data.match(/(\d+)%/)?.[1] || 0)
+          console.log(volume)
+        }
+      }
+    }
+
+    Process {
+      running: true
+      id: muteProcess
+      command: ["pactl", "get-sink-mute", "@DEFAULT_SINK@"]
+      stdout: SplitParser { splitMarker: ""; onRead: data => muted = data == "Mute: yes\n" }
+    }
 
     function triggerOsd() {
         GlobalStates.osdVolumeOpen = true
@@ -36,19 +81,7 @@ Scope {
         function onBrightnessChanged() {
             GlobalStates.osdVolumeOpen = false
         }
-    }
-
-    Connections { // Listen to volume changes
-        target: Audio.sink?.audio ?? null
-        function onVolumeChanged() {
-            if (!Audio.ready) return
-            root.triggerOsd()
-        }
-        function onMutedChanged() {
-            if (!Audio.ready) return
-            root.triggerOsd()
-        }
-    }
+   }
 
     Connections { // Listen to protection triggers
         target: Audio
@@ -63,7 +96,7 @@ Scope {
         active: GlobalStates.osdVolumeOpen
 
         sourceComponent: PanelWindow {
-            id: osdRoot
+ Connections           id: osdRoot
             color: "transparent"
 
             Connections {
@@ -124,8 +157,8 @@ Scope {
                         OsdValueIndicator {
                             id: osdValues
                             Layout.fillWidth: true
-                            value: Audio.sink?.audio.volume ?? 0
-                            icon: Audio.sink?.audio.muted ? "volume_off" : "volume_up"
+                            value: volume ?? 0
+                            icon: muted ? "volume_off" : "volume_up"
                             name: Translation.tr("Volume")
                         }
 
