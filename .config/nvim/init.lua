@@ -7,9 +7,10 @@ vim.o.tabstop = 2
 vim.o.smartindent = true
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
-
+vim.wo.number = true
 vim.o.clipboard = 'unnamedplus'
 vim.o.mouse="v"
+
 vim.g.clipboard = {
   name = "wl-clipboard",
   copy = {
