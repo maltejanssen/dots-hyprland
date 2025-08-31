@@ -61,7 +61,7 @@ Scope {
       stdout: SplitParser { 
         splitMarker: ""; 
         onRead: data => {
-          muted = data == "Mute: yes\n" 
+          muted = data  
           console.log(muted)                                                                  
           root.triggerOsd()    
         }
@@ -166,7 +166,7 @@ Scope {
                         OsdValueIndicator {
                             id: osdValues
                             Layout.fillWidth: true
-                            value: 10
+                            value: root.volume ?? 0 
                             icon: "volume_up"
                             //value: volume ?? 0
                             //icon: muted ? "volume_off" : "volume_up"
