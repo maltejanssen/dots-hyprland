@@ -63,8 +63,7 @@ Scope {
       stdout: SplitParser { 
         splitMarker: ""; 
         onRead: data => {
-          console.log(data)
-          root.muted = data  
+          root.muted = data  == "Mute: yes\n"
           console.log(root.muted)                                                                  
           root.triggerOsd()    
         }
@@ -90,7 +89,7 @@ Scope {
       stdout: SplitParser { 
         splitMarker: ""; 
         onRead: data => {
-          root.micMuted = data 
+          root.micMuted = data == "Mute: yes\n" 
         }
       }
     }
