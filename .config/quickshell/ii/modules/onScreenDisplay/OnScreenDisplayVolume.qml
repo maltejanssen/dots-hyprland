@@ -30,12 +30,12 @@ Scope {
             muteProcess.running = true
             return
           }
-          const [, updatedSource] = data.match(/source #(\d+)/) ?? []
-          if (updatedSource) {
-            micVolumeProcess.running = true
-            micMuteProcess.running = true
-            return
-          }
+          //const [, updatedSource] = data.match(/source #(\d+)/) ?? []
+          //if (updatedSource) {
+          //  micVolumeProcess.running = true
+          //  micMuteProcess.running = true
+          //  return
+          //}
         }
       }
     }
@@ -62,14 +62,15 @@ Scope {
         splitMarker: ""; 
         onRead: data => {
           muted = data == "Mute: yes\n" 
-          console.log(volume)                                                                  
+          console.log(muted)                                                                  
           root.triggerOsd()    
         }
       }        
     }
 
     function triggerOsd() {
-        GlobalStates.osdVolumeOpen = true
+        console.log("triggerosd")
+      GlobalStates.osdVolumeOpen = true
         osdTimeout.restart()
     }
 
@@ -165,8 +166,10 @@ Scope {
                         OsdValueIndicator {
                             id: osdValues
                             Layout.fillWidth: true
-                            value: volume ?? 0
-                            icon: muted ? "volume_off" : "volume_up"
+                            value: 10
+                            icon: "volume_up"
+                            //value: volume ?? 0
+                            //icon: muted ? "volume_off" : "volume_up"
                             name: Translation.tr("Volume")
                         }
 
