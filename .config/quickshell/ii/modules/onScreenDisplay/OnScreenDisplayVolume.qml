@@ -50,7 +50,6 @@ Scope {
         splitMarker: ""
         onRead: data => {
           root.volume = Number(data.match(/(\d+)%/)?.[1] || 0)
-          console.log(root.volume)
           root.triggerOsd()
         }
       }
@@ -64,7 +63,6 @@ Scope {
         splitMarker: ""; 
         onRead: data => {
           root.muted = data  == "Mute: yes\n"
-          console.log(root.muted)                                                                  
           root.triggerOsd()    
         }
       }        
@@ -95,9 +93,8 @@ Scope {
     }
 
     function triggerOsd() {
-        console.log("triggerosd")
       GlobalStates.osdVolumeOpen = true
-        osdTimeout.restart()
+      osdTimeout.restart()
     }
 
     Timer {
