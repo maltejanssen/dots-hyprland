@@ -18,6 +18,8 @@ Scope {
     property int volume: -1
     property int micVolume: -1
     property bool muted: false
+    property bool micMuted: false
+
     Process {
       running: true
       onRunningChanged: running = true
@@ -30,12 +32,12 @@ Scope {
             muteProcess.running = true
             return
           }
-          //const [, updatedSource] = data.match(/source #(\d+)/) ?? []
-          //if (updatedSource) {
-          //  micVolumeProcess.running = true
-          //  micMuteProcess.running = true
-          //  return
-          //}
+          const [, updatedSource] = data.match(/source #(\d+)/) ?? []
+          if (updatedSource) {
+            micVolumeProcess.running = true
+            micMuteProcess.running = true
+            return
+          }
         }
       }
     }
@@ -47,8 +49,8 @@ Scope {
       stdout: SplitParser {
         splitMarker: ""
         onRead: data => {
-          volume = Number(data.match(/(\d+)%/)?.[1] || 0)
-          console.log(volume)
+          root.volume = Number(data.match(/(\d+)%/)?.[1] || 0)
+          console.log(root.volume)
           root.triggerOsd()
         }
       }
@@ -61,13 +63,35 @@ Scope {
       stdout: SplitParser { 
         splitMarker: ""; 
         onRead: data => {
-          muted = data  
-          console.log(muted)                                                                  
+          root.muted = data  
+          console.log(root.muted)                                                                  
           root.triggerOsd()    
         }
       }        
     }
 
+    Process { //TODO want to do something with this??
+      running: true
+      id: micVolumeProcess
+      command: ["pactl", "get-source-volume", "@DEFAULT_SOURCE@"]
+      stdout: SplitParser {
+        splitMarker: ""
+        onRead: data => { 
+          root.micVolume = Number(data.match(/(\d+)%/)?.[1] || 0)
+        }
+      }
+    }
+
+    Process { #todo want to do something with this??
+      running: true
+      id: micMuteProcess
+      command: ["pactl", "get-source-mute", "@DEFAULT_SOURCE@"]
+      stdout: SplitParser { 
+        splitMarker: ""; 
+        onRead: data => {
+          root.micMuted = data 
+        }
+    }
     function triggerOsd() {
         console.log("triggerosd")
       GlobalStates.osdVolumeOpen = true
@@ -166,10 +190,8 @@ Scope {
                         OsdValueIndicator {
                             id: osdValues
                             Layout.fillWidth: true
-                            value: root.volume ?? 0 
-                            icon: "volume_up"
-                            //value: volume ?? 0
-                            //icon: muted ? "volume_off" : "volume_up"
+                            value: root.volume / 100 //for some reason it shows value *100 otherwise 
+                            icon: root.muted ? "volume_off" : "volume_up"
                             name: Translation.tr("Volume")
                         }
 
