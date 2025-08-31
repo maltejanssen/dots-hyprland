@@ -49,6 +49,7 @@ Scope {
         onRead: data => {
           volume = Number(data.match(/(\d+)%/)?.[1] || 0)
           console.log(volume)
+          root.triggerOsd()
         }
       }
     }
@@ -57,7 +58,14 @@ Scope {
       running: true
       id: muteProcess
       command: ["pactl", "get-sink-mute", "@DEFAULT_SINK@"]
-      stdout: SplitParser { splitMarker: ""; onRead: data => muted = data == "Mute: yes\n" }
+      stdout: SplitParser { 
+        splitMarker: ""; 
+        onRead: data => {
+          muted = data == "Mute: yes\n" 
+          console.log(volume)                                                                  
+          root.triggerOsd()    
+        }
+      }        
     }
 
     function triggerOsd() {
