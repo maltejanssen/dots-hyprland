@@ -96,7 +96,7 @@ Scope {
         active: GlobalStates.osdVolumeOpen
 
         sourceComponent: PanelWindow {
- Connections           id: osdRoot
+            id: osdRoot
             color: "transparent"
 
             Connections {
