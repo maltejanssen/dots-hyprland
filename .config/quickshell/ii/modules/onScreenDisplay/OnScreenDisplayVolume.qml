@@ -82,7 +82,7 @@ Scope {
       }
     }
 
-    Process { #todo want to do something with this??
+    Process { //Todo want to do something with this??
       running: true
       id: micMuteProcess
       command: ["pactl", "get-source-mute", "@DEFAULT_SOURCE@"]
