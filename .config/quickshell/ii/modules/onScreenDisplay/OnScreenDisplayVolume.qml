@@ -91,7 +91,9 @@ Scope {
         onRead: data => {
           root.micMuted = data 
         }
+      }
     }
+
     function triggerOsd() {
         console.log("triggerosd")
       GlobalStates.osdVolumeOpen = true
