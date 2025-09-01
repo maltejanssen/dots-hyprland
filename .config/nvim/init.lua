@@ -7,14 +7,17 @@ vim.o.tabstop = 2
 vim.o.smartindent = true
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
-
-local keymap = vim.keymap
 -- delete without copying into register
 keymap.set({'n', 'v'}, 'x', '"_x')
 keymap.set({'n', 'v'}, 'd', '"_d')
 
+vim.wo.number = true
 vim.o.clipboard = 'unnamedplus'
 vim.o.mouse="v"
+vim.opt.scrolloff = 10
+vim.opt.inccommand = "split"
+vim.opt.incsearch = true
+
 vim.g.clipboard = {
   name = "wl-clipboard",
   copy = {

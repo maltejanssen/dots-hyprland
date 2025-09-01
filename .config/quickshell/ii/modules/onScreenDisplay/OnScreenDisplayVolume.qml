@@ -14,10 +14,87 @@ Scope {
     id: root
     property string protectionMessage: ""
     property var focusedScreen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name)
+ 
+    property int volume: -1
+    property int micVolume: -1
+    property bool muted: false
+    property bool micMuted: false
+
+    Process {
+      running: true
+      onRunningChanged: running = true
+      command: ["pactl", "subscribe"]
+      stdout: SplitParser {
+        onRead: data => {
+          const [, updatedSink] = data.match(/sink #(\d+)/) ?? []
+          if (updatedSink) {
+            volumeProcess.running = true
+            muteProcess.running = true
+            return
+          }
+          const [, updatedSource] = data.match(/source #(\d+)/) ?? []
+          if (updatedSource) {
+            micVolumeProcess.running = true
+            micMuteProcess.running = true
+            return
+          }
+        }
+      }
+    }
+
+    Process {
+      running: true
+      id: volumeProcess
+      command: ["pactl", "get-sink-volume", "@DEFAULT_SINK@"]
+      stdout: SplitParser {
+        splitMarker: ""
+        onRead: data => {
+          root.volume = Number(data.match(/(\d+)%/)?.[1] || 0)
+          root.triggerOsd()
+        }
+      }
+    }
+
+    Process {
+      running: true
+      id: muteProcess
+      command: ["pactl", "get-sink-mute", "@DEFAULT_SINK@"]
+      stdout: SplitParser { 
+        splitMarker: ""; 
+        onRead: data => {
+          root.muted = data  == "Mute: yes\n"
+          root.triggerOsd()    
+        }
+      }        
+    }
+
+    Process { //TODO want to do something with this??
+      running: true
+      id: micVolumeProcess
+      command: ["pactl", "get-source-volume", "@DEFAULT_SOURCE@"]
+      stdout: SplitParser {
+        splitMarker: ""
+        onRead: data => { 
+          root.micVolume = Number(data.match(/(\d+)%/)?.[1] || 0)
+        }
+      }
+    }
+
+    Process { //Todo want to do something with this??
+      running: true
+      id: micMuteProcess
+      command: ["pactl", "get-source-mute", "@DEFAULT_SOURCE@"]
+      stdout: SplitParser { 
+        splitMarker: ""; 
+        onRead: data => {
+          root.micMuted = data == "Mute: yes\n" 
+        }
+      }
+    }
 
     function triggerOsd() {
-        GlobalStates.osdVolumeOpen = true
-        osdTimeout.restart()
+      GlobalStates.osdVolumeOpen = true
+      osdTimeout.restart()
     }
 
     Timer {
@@ -36,19 +113,7 @@ Scope {
         function onBrightnessChanged() {
             GlobalStates.osdVolumeOpen = false
         }
-    }
-
-    Connections { // Listen to volume changes
-        target: Audio.sink?.audio ?? null
-        function onVolumeChanged() {
-            if (!Audio.ready) return
-            root.triggerOsd()
-        }
-        function onMutedChanged() {
-            if (!Audio.ready) return
-            root.triggerOsd()
-        }
-    }
+   }
 
     Connections { // Listen to protection triggers
         target: Audio
@@ -124,8 +189,8 @@ Scope {
                         OsdValueIndicator {
                             id: osdValues
                             Layout.fillWidth: true
-                            value: Audio.sink?.audio.volume ?? 0
-                            icon: Audio.sink?.audio.muted ? "volume_off" : "volume_up"
+                            value: root.volume / 100 //for some reason it shows value *100 otherwise 
+                            icon: root.muted ? "volume_off" : "volume_up"
                             name: Translation.tr("Volume")
                         }
 

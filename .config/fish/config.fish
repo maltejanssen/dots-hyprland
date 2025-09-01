@@ -21,7 +21,8 @@ alias pamcan pacman
 alias ls 'eza --icons'
 alias clear "printf '\033[2J\033[3J\033[1;1H'"
 alias q 'qs -c ii'
-    
+
+eval (direnv hook fish)
 
 # function fish_prompt
 #   set_color cyan; echo (pwd)
