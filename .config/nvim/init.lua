@@ -14,7 +14,6 @@ vim.keymap.set('v', '<C-c>', 'y')
 
 vim.wo.number = true
 vim.o.clipboard = 'unnamedplus'
-#vim.o.mouse="a"
 vim.opt.scrolloff = 10
 vim.opt.inccommand = "split"
 vim.opt.incsearch = true
