@@ -10,10 +10,11 @@ vim.o.expandtab = true
 -- delete without copying into register
 vim.keymap.set({'n', 'v'}, 'x', '"_x')
 vim.keymap.set({'n', 'v'}, 'd', '"_d')
+vim.keymap.set('v', '<C-c>', 'y')
 
 vim.wo.number = true
 vim.o.clipboard = 'unnamedplus'
-vim.o.mouse="a"
+#vim.o.mouse="a"
 vim.opt.scrolloff = 10
 vim.opt.inccommand = "split"
 vim.opt.incsearch = true
