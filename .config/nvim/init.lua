@@ -8,8 +8,8 @@ vim.o.smartindent = true
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
 -- delete without copying into register
-keymap.set({'n', 'v'}, 'x', '"_x')
-keymap.set({'n', 'v'}, 'd', '"_d')
+vim.keymap.set({'n', 'v'}, 'x', '"_x')
+vim.keymap.set({'n', 'v'}, 'd', '"_d')
 
 vim.wo.number = true
 vim.o.clipboard = 'unnamedplus'
