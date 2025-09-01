@@ -11,9 +11,8 @@ vim.o.expandtab = true
 vim.keymap.set({'n', 'v'}, 'x', '"_x')
 vim.keymap.set({'n', 'v'}, 'd', '"_d')
 
-local set = vim.keymap.set
-set('x', '<C-S-C>', '"+y") -- yank to clipboard register ("+)
-set('x', '<C-S-X>', '"+d") -- cut to clipboard register ("+)
+vim.keymap.set('x', '<C-S-C>', '"+y') -- yank to clipboard register ("+)
+vim.keymap.set('x', '<C-S-X>', '"+d') -- cut to clipboard register ("+)
 
 
 vim.wo.number = true
