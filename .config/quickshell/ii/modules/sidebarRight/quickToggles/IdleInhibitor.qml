@@ -13,7 +13,8 @@ QuickToggleButton {
             root.toggled = false
             Quickshell.execDetached(["pkill", "wayland-idle"]) // pkill doesn't accept too long names
         } else {
-            root.toggled = true
+          root.toggled = true
+            tt.content = "test"
             Quickshell.execDetached([
               'python',
               '/home/malte/.config/quickshell/ii/scripts/wayland-idle-inhibitor.py'
@@ -29,6 +30,7 @@ QuickToggleButton {
         }
     }
     StyledToolTip {
+        id: tt
         content: Translation.tr("Keep system awake")
     }
 }
