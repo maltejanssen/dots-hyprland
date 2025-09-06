@@ -14,7 +14,10 @@ QuickToggleButton {
             Quickshell.execDetached(["pkill", "wayland-idle"]) // pkill doesn't accept too long names
         } else {
             root.toggled = true
-            Quickshell.execDetached([`python ${Directories.scriptPath}/wayland-idle-inhibitor.py`])
+            Quickshell.execDetached([
+              'python',
+              `${Directories.scriptPath}/wayland-idle-inhibitor.py`
+            ])
         }
     }
     Process {
