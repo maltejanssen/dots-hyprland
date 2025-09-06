@@ -16,7 +16,7 @@ QuickToggleButton {
             root.toggled = true
             Quickshell.execDetached([
               'python',
-              `${Directories.scriptPath}/wayland-idle-inhibitor.py`
+              '/home/malte/.config/quickshell/ii/scripts/wayland-idle-inhibitor.py'
             ])
         }
     }
