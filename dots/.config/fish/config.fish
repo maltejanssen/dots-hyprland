@@ -11,6 +11,8 @@ if status is-interactive # Commands to run in interactive sessions can go here
     # No greeting
     set fish_greeting
 
+    set -gx GPG_TTY (tty)
+
     # Use starship
     starship init fish | source
     if test -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt
