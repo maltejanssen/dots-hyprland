@@ -150,11 +150,9 @@ Singleton {
             }
 
             property JsonObject apps: JsonObject {
-                property string bluetooth: "blueman-manager"
-                property string network: "kitty -1 fish -c nmtui"
-                //property string bluetooth: "kcmshell6 kcm_bluetooth"
+                property string bluetooth: "kcmshell6 kcm_bluetooth"
                 property string changePassword: "kitty -1 --hold=yes fish -i -c 'passwd'"
-                //property string network: "kcmshell6 kcm_networkmanagement"
+                property string network: "kcmshell6 kcm_networkmanagement"
                 property string manageUser: "kcmshell6 kcm_users"
                 property string networkEthernet: "kcmshell6 kcm_networkmanagement"
                 property string taskManager: "plasma-systemmonitor --page-name Processes"
